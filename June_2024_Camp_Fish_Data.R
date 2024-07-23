@@ -5,7 +5,7 @@ glimpse(PRELIMINARY_Camp_Fish_Data)
 #Conducting two-sample t-test; can insert any type of variable after the '$' in the t.test() function
 ref <- PRELIMINARY_Camp_Fish_Data %>%
   filter(Basin == "Ref")
-View(ref)
+View(ref) 
 
 trt <- PRELIMINARY_Camp_Fish_Data %>% 
   filter(Basin == "Trt")
