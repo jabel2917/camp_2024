@@ -123,4 +123,41 @@ lmb_bp_size <- ggplot(lmb_lw_2024, aes(x = basin, y = lw_ration)) +
 lmb_bp_size
 
 ####Diet 2024####
+#Total weight per basin and proportions already calculated 
+
+diets_2024_unfin <- read_csv("diets_2024_unfin.csv")
+View(diets_2024_unfin)
+
+#Stacked barplot - dry weight prop
+
+diet_dw_sbp <-ggplot(diets_2024_unfin, aes(x = basin, y = prop_weight, fill = diet_item)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Diet Proportions per Basin",
+       x = "Basin",
+       y = "Proportion of Total Weight") +
+  theme_minimal()
+diet_dw_sbp
+
+#Weight pie chart 
+diet_dw_pie <- ggplot(diets_2024_unfin, aes(x = "", y = prop_weight, fill = diet_item)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  facet_wrap(~ basin) +
+  labs(title = "Diet Proportions per Basin",
+       x = NULL,
+       y = NULL) +
+  theme_void() + 
+  theme(legend.position = "right")
+diet_dw_pie
+
+#Stacked barplot - number
+
+diet_num_sbp <-ggplot(diets_2024_unfin, aes(x = basin, y = number, fill = diet_item)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Diet Numbers per Basin",
+       x = "Basin",
+       y = "Raw Numbers") +
+  theme_minimal()
+diet_num_sbp
+
 
