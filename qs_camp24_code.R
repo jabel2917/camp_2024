@@ -74,3 +74,34 @@ blg_bp <- ggplot(blg_preyfish, aes(x = basin, y = CPUE)) +
   theme_minimal()
 blg_bp
 
+####LMB Length Weight 2024####
+lmb_lw_2024 <- read_csv("lmb_lw_2024.csv")
+View(lmb_lw_2024)
+
+#Omit NAs in basin, and weights >1000 and <100
+lmb_lw_2024<- lmb_lw_2024 %>%
+  filter(!is.na(basin) & weight != 1000 & weight >= 100)
+
+lmb_lw_2024 <- lmb_lw_2024 %>%
+  mutate(lw_ration = length / weight)
+
+lmb_bp <- ggplot(lmb_lw_2024, aes(x = basin, y = lw_ration)) +
+  geom_boxplot() +                       
+  geom_jitter(width = 0.1, alpha = 0.3, shape=15) + 
+  labs(title = "Length-Weight Ration",
+       x = "Basin",
+       y = "Length-Weight Ration") +
+  theme_minimal()
+lmb_bp
+
+#Test for significance 
+
+# Split the data by basin
+ref_t <- lmb_lw_2024 %>% filter(basin == 'reference') %>% pull(lw_ration)
+trt_t <- lmb_lw_2024 %>% filter(basin == 'treatment') %>% pull(lw_ration)
+
+# Run a t-test comparing the two basins
+t_test <- t.test(ref_t, trt_t)
+
+# Print the results of the t-test
+print(t_test)
