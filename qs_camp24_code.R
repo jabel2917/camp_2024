@@ -88,7 +88,7 @@ lmb_lw_2024 <- lmb_lw_2024 %>%
 lmb_bp <- ggplot(lmb_lw_2024, aes(x = basin, y = lw_ration)) +
   geom_boxplot() +                       
   geom_jitter(width = 0.1, alpha = 0.3, shape=15) + 
-  labs(title = "Length-Weight Ration",
+  labs(title = "Length-Weight Ration by Basin",
        x = "Basin",
        y = "Length-Weight Ration") +
   theme_minimal()
@@ -105,3 +105,23 @@ t_test <- t.test(ref_t, trt_t)
 
 # Print the results of the t-test
 print(t_test)
+
+#Add size column 
+
+lmb_lw_2024 <- lmb_lw_2024 %>%
+  mutate(size = ifelse(length >= 305, 'large', 'small'))
+
+#Facet wrap by size 
+lmb_bp_size <- ggplot(lmb_lw_2024, aes(x = basin, y = lw_ration)) +
+  geom_boxplot() +                       
+  geom_jitter(width = 0.1, alpha = 0.3, shape=15) + 
+  labs(title = "Length-Weight Ration by Basin and Size ",
+       x = "Basin",
+       y = "Length-Weight Ration") +
+  facet_wrap(~size) +
+  theme_minimal()
+lmb_bp_size
+
+
+
+
