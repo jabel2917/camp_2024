@@ -161,3 +161,20 @@ diet_num_sbp <-ggplot(diets_2024_unfin, aes(x = basin, y = number, fill = diet_i
 diet_num_sbp
 
 
+
+diet_dw_pie <- ggplot(diets_2024_unfin, aes(x = "", y = prop_weight, fill = diet_item)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  facet_wrap(~ basin, scales = "free", ncol = 2) +  # Adjusting the facets
+  #labs(title = "Diet Proportions per Basin",
+  #     x = NULL,
+  #     y = NULL) +
+  theme_void() + 
+  theme(
+    legend.position = "bottom",  # Moving labels to the bottom
+    strip.text = element_text(size = 12),  # Increasing the size of facet labels
+    #plot.title = element_text(size = 20),  # Increasing the size of the title
+    plot.margin = margin(1, 1, 1, 1)  # Adjusting plot margins
+  )
+
+diet_dw_pie
