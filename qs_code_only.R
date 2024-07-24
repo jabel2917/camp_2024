@@ -2,6 +2,7 @@
 
 library(tidyverse)
 library(readr)
+library(RColorBrewer)
 
 bmi_2024 <- read_csv("bmi_2024.csv")
 View(bmi_2024)
@@ -119,6 +120,7 @@ lmb_bp_size <- ggplot(lmb_lw_2024, aes(x = basin, y = lw_ration)) +
        x = "Basin",
        y = "Length-Weight Ration") +
   facet_wrap(~size) +
+  
   theme_minimal()
 lmb_bp_size
 
@@ -178,3 +180,43 @@ diet_dw_pie <- ggplot(diets_2024_unfin, aes(x = "", y = prop_weight, fill = diet
   )
 
 diet_dw_pie
+
+
+#Weight pie chart 
+new_labels <- c(
+  "aquainv" = "Aquatic Invertebrate",
+  "coleoptera" = "Coleoptera",
+  "diptera" = "Diptera",
+  "fish" = "Fish",
+  "odonata" = "Odonata",
+  "terinv" = "Terrestrial Invertebrate",
+  "terver" = "Terrestrial Vertebrate",
+  "trichoptera" = "Trichoptera")
+
+facet_labels <- c(
+  "reference" = "Simple",
+  "treatment" = "Complex")
+
+diets_2024 <- read_csv("diets_2024.csv")
+
+diet_dw_pie <- ggplot(diets_2024, aes(x = "", y = prop_weight, fill = diet_item)) +
+  geom_bar(stat = "identity", width = ) +
+  coord_polar("y") +
+  facet_wrap(~ basin, labeller = labeller(basin = facet_labels)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = "Diet Items") +
+  theme_void() + 
+  theme(
+    legend.position = "bottom",  # Moving labels to the bottom
+    legend.text = element_text(size = 16),
+    strip.text = element_text(size = 16),
+    legend.title = element_text(size = 16), # Increasing the size of facet labels
+    #plot.title = element_text(size = 20),  # Increasing the size of the title
+    plot.margin = margin(1, 1, 1, 1)  # Adjusting plot margins
+  )+
+
+  scale_fill_manual(values = scales::hue_pal()(length(new_labels)), labels = new_labels)
+diet_dw_pie
+
+
