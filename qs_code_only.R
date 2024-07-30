@@ -218,4 +218,35 @@ diet_dw_pie <- ggplot(diets_2024, aes(x = "", y = prop_weight, fill = diet_item)
   scale_fill_manual(values = scales::hue_pal()(length(new_labels)), labels = new_labels)
 diet_dw_pie
 
+diets_2024$diet_item_coarse <- ifelse(diets_2024$diet_item == "fish", "Fish", "Other")
+
+#New pie chart - broad categories 
+aggregated_data <- diets_2024 %>%
+  group_by(basin, diet_item_coarse) %>%
+  summarise(total_weight = sum(prop_weight)) %>%
+  ungroup()
+
+
+diet_dw_pie_coarse <- ggplot(aggregated_data, aes(x = "", y = total_weight, fill = diet_item_coarse)) +
+  geom_bar(stat = "identity", width = 1, color = "black") +
+  coord_polar("y") +
+  facet_wrap(~ basin,labeller = labeller(basin = facet_labels)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = "Diet Items") +
+  theme_void() + 
+  theme(
+    legend.position = "bottom",  # Moving labels to the bottom
+    legend.text = element_text(size = 16),
+    strip.text = element_text(size = 16),
+    legend.title = element_text(size = 16), # Increasing the size of facet labels
+    #plot.title = element_text(size = 20),  # Increasing the size of the title
+    plot.margin = margin(1, 1, 1, 1)  # Adjusting plot margins
+  ) +
+  scale_fill_manual(values = c("Fish" = "deepskyblue4", "Other" = "tan3"), labels = c("Fish", "Other"))
+
+diet_dw_pie_coarse
+
+
+
 
