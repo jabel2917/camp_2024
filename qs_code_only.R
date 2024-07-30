@@ -215,7 +215,6 @@ diet_dw_pie <- ggplot(diets_2024, aes(x = "", y = prop_weight, fill = diet_item)
     #plot.title = element_text(size = 20),  # Increasing the size of the title
     plot.margin = margin(1, 1, 1, 1)  # Adjusting plot margins
   )+
-
   scale_fill_manual(values = scales::hue_pal()(length(new_labels)), labels = new_labels)
 diet_dw_pie
 
