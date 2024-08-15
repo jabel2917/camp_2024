@@ -2,6 +2,10 @@ library(dplyr)
 library(ggplot2)
 glimpse(PRELIMINARY_Camp_Fish_Data)
 
+library(readr)
+lmb_lw_2024 <- read_csv("lmb_lw_2024.csv")
+View(lmb_lw_2024)
+
 #Conducting two-sample t-test; can insert any type of variable after the '$' in the t.test() function
 ref <- PRELIMINARY_Camp_Fish_Data %>%
   filter(Basin == "Ref")
@@ -61,97 +65,29 @@ mean(trt$weight)
 
 
 ####Making a final boxplot for LWratios in each basin####
+library(dplyr)
+library(ggplot2)
 
-dark2_colors <- brewer.pal(n = 8, name = "Dark2")
-
-# Assign selected colors to specific basins
-selected_colors <- c(dark2_colors[1], dark2_colors[3], dark2_colors[5])  # Example: pick the 1st, 3rd, and 5th colors
-
-# Ensure the number of selected colors matches the number of unique basins
-unique_basins <- unique(lmb_lw_2024$Basin)
-num_colors <- length(unique_basins)
-
-# If there are more basins than colors specified, repeat the colors
-if (num_colors > length(selected_colors)) {
-  selected_colors <- rep(selected_colors, length.out = num_colors)
-}
-
-# Create a named vector of colors
-color_map <- setNames(selected_colors[1:num_colors], unique_basins)
-
-# Create the boxplot with specified colors from Dark2 palette
-lmb_bp <- ggplot(lmb_lw_2024, aes(x = Basin, y = lw_ration, color = Basin)) +
-  geom_boxplot() +                       
-  geom_jitter(width = 0.1, alpha = 0.3, shape = 15) + 
-  labs(x = "Basin",
-       y = "Length-Weight Ratio") +
-  scale_color_manual(values = color_map) +
-  theme_classic()
-
-# Display the plot
-lmb_bp
+lmb_lw_2024 <- read_csv("lmb_lw_2024.csv")
+View(lmb_lw_2024)
 
 # Changing the data set so that it says "simple" and "complex", not "reference" and "treatment"
 lmb_lw_2024 <- lmb_lw_2024 %>%
-  mutate(Basin = recode(Basin,
-                        "Treatment" = "Complex",
-                        "Reference" = "Simple"))
-view(lmb_lw_2024)
-
-#Recreating the boxplot
-lmb_bp <- ggplot(lmb_lw_2024, aes(x = Basin, y = lw_ration, color = Basin)) +
-  geom_boxplot() +                       
-  geom_jitter(width = 0.1, alpha = 0.3, shape = 15) + 
-  labs(x = "Basin",
-       y = "Length-Weight Ratio") +
-  scale_color_manual(values = color_map) +
-  theme_classic() +
-  theme(axis.title.x = element_text(size = 16),
-        axis.title.y = element_text(size = 16),
-        axis.text.x = element_text(size = 16),
-        axis.text.y = element_text(size = 16))  
-lmb_bp
-
-#Capitalizing the elements in the "Size" column
-library(stringr)
-lmb_lw_2024 <- lmb_lw_2024 %>%
-  mutate(size = str_to_title(size))
-view(lmb_lw_2024)
-
-#Splitting up the boxplot by size structure
-lmb_lw_2024 <- lmb_lw_2024 %>%
-  mutate(size = factor(size, levels = c("Small", "Large")))
+  mutate(basin = recode(basin,
+                        "treatment" = "Complex",
+                        "reference" = "Simple"))
+View(lmb_lw_2024)
 
 # Create the boxplot with facets in the specified order
-lmb_bp_size <- ggplot(lmb_lw_2024, aes(x = Basin, y = lw_ration, color = Basin)) +
-  geom_boxplot() +                       
+lmb_bp_size <- ggplot(lmb_lw_2024, aes(x = basin, y = lw_ration, color = basin)) +
+  geom_boxplot() + 
+  scale_color_manual(values = c("Complex" = "#005239", "Simple" = "#7570b3")) + # Ensure jitter points match boxplot colors
   geom_jitter(width = 0.1, alpha = 0.3, shape=15) + 
   labs(x = "Basin",
        y = "Length-Weight Ratio") +
-  facet_wrap(~size) +
-  scale_color_manual(values = color_map) +
   theme_classic() +
   theme(axis.title.x = element_text(size = 16),
         axis.title.y = element_text(size = 16),
         axis.text.x = element_text(size = 16),
         axis.text.y = element_text(size = 16))
 lmb_bp_size
-
-# Display the plot
-lmb_bp_size
-
-my_palette <- c("royalblue4", "hotpink4")
-
-# Create the boxplot with specified colors from Dark2 palette
-lmb_bp <- ggplot(lmb_lw_2024, aes(x = Basin, y = lw_ration, color = Basin)) +
-  geom_boxplot() +                       
-  geom_jitter(width = 0.1, alpha = 0.3, shape = 15) + 
-  labs(x = "Basin",
-       y = "Length-Weight Ratio") +
-  scale_color_manual(values = my_palette) +
-  theme_classic()
-
-# Display the plot
-lmb_bp
-
-
