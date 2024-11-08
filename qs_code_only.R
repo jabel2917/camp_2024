@@ -43,6 +43,64 @@ bmi_sbp_percentage <- ggplot(bmi_sum_percentage, aes(x = basin, y = percentage, 
   theme_minimal()
 bmi_sbp_percentage
 
+####JC BMI 2024####
+#Exclude chironomids 
+bmi_plot <- bmi_complete_2024 %>%
+  filter(family != "chironomidae") %>%
+  group_by(family, month, basin) %>%
+  summarize(number = sum(number)) %>%
+  ungroup()
+
+ggplot(bmi_plot, aes(x = family, y = number, fill = month)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  facet_wrap(~ basin) +
+  labs(title = "Number of Family by Month in Each Basin",
+       x = "Family",
+       y = "Total Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+ggplot(bmi_complete_2024, aes(x = family, y = number)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  facet_wrap(basin~month) +
+  labs(title = "Number of Each Bug Family by Month in Each Basin",
+       x = "BMI Family",
+       y = "Total Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+odonata_data <- bmi_complete_2024 %>%
+  filter(family == "odonata")
+odonata_data$month <- factor(odonata_data$month, levels = c("June", "July", "August"))
+
+
+ggplot(odonata_data, aes(x = family, y = number, fill=month)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  facet_wrap(~site_id) +
+  labs(title = "Number of Odonata by Month at each site",
+       x = "BMI Family",
+       y = "Total Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+odonata_basin_totals <- odonata_data %>%
+  group_by(month, basin) %>%
+  summarize(Total_Count = sum(number)) %>%
+  ungroup()
+
+ggplot(odonata_basin_totals, aes(x = month, y = Total_Count, fill = month)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  facet_wrap(~ basin) +
+  labs(title = "Total Number of Odonata by Month in Each Basin",
+       x = "Month",
+       y = "Total Count") +
+  theme_minimal() +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
 ####Preyfish 2024####
 
 #Note - removed perch and minnowtraps from these data to avoid 0 inflation 
@@ -161,6 +219,15 @@ diet_num_sbp <-ggplot(diets_2024_unfin, aes(x = basin, y = number, fill = diet_i
        y = "Raw Numbers") +
   theme_minimal()
 diet_num_sbp
+
+ggplot(diets_2024_unfin %>% 
+         filter(diet_item != "fish"),  # Filter out "fish"
+       aes(x = basin, y = prop_number, fill = diet_item)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Diet Numbers per Basin",
+       x = "Basin",
+       y = "Raw Numbers") +
+  theme_minimal()
 
 
 
